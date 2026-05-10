@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HBD Guesguan</title>
+    <title></title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Share+Tech+Mono&display=swap');
@@ -64,7 +64,6 @@
             box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
         }
 
-        /* Tapa del regalo */
         .tapa {
             position: absolute;
             top: -15px;
@@ -86,7 +85,6 @@
             text-shadow: 0 0 10px #ff4757;
         }
 
-        /* Animación de temblor */
         .tiembla { animation: shake 0.1s infinite cubic-bezier(.36,.07,.19,.97); }
 
         @keyframes shake {
@@ -102,8 +100,6 @@
             height: 150px;
             font-weight: 900;
         }
-
-        /* --- Pantalla 2: El mensaje --- */
         #pantalla2 {
             display: none;
             text-align: center;
@@ -160,13 +156,13 @@
 
     <div id="pantalla2">
         <div class="foto-espacio">
-            <img src="TU_FOTO_AQUI.jpg" alt="Guesguan">
+            <img src="https://www.facebook.com/photo/?fbid=25129810893371230&set=a.104883499623982">
         </div>
         <div id="mensaje"></div><span class="cursor"></span>
     </div>
 
     <script>
-        const mensajeFinal = "¡GUESGUAN! 🔥 Un año más en el juego. Hoy se celebra fuerte, que sigan llegando los éxitos y que el nivel nunca baje. ¡Feliz cumple, fiera! 👊💥";
+        const mensajeFinal = "¡Feliz día, mamá! Gracias por ser mi guía, mi apoyo y mi mejor ejemplo. Te quiero muchísimo.";
 
         function triggerSecuencia() {
             const regalo = document.getElementById('regalo');
@@ -194,7 +190,6 @@
             document.getElementById('pantalla1').style.display = 'none';
             document.getElementById('pantalla2').style.display = 'block';
 
-            // Explosión Pro de Confeti
             var end = Date.now() + (4 * 1000);
             var colors = ['#00ffcc', '#f1c40f', '#ff4757'];
 
