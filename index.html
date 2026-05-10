@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Para Mamá</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --color-caja: #d63031;
+            --color-tapa: #ff4757;
+            --color-lazo: #f1c40f;
+        }
 
         body {
             margin: 0;
@@ -21,85 +27,131 @@
         }
 
         /* --- Pantalla 1: Regalo 3D --- */
-        #pantalla1 { text-align: center; }
-
-        .regalo-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-            cursor: pointer;
-            perspective: 600px;
+        #pantalla1 { 
+            text-align: center; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+        /* Contenedor de perspectiva para el 3D */
+        .regalo-container {
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        /* La caja en sí */
         .caja-3d {
             width: 100%;
             height: 100%;
-            background: #d63031;
             position: relative;
-            border-radius: 4px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(30deg);
+            transition: transform 0.5s ease;
         }
 
-        /* Lazo del regalo */
-        .caja-3d::before {
+        .regalo-container:hover .caja-3d {
+            transform: rotateX(-20deg) rotateY(50deg);
+        }
+
+        /* Caras de la caja */
+        .cara {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--color-caja);
+            border: 2px solid rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Lazo en las caras */
+        .cara::before {
             content: '';
             position: absolute;
-            width: 30px;
+            background: var(--color-lazo);
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* Vertical ribbon */
+        .cara.frente::before, .cara.atras::before, .cara.izquierda::before, .cara.derecha::before {
+            width: 40px;
             height: 100%;
-            background: #f1c40f;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
         }
 
-        .caja-3d::after {
+        .frente     { transform: translateZ(100px); }
+        .atras      { transform: rotateY(180deg) translateZ(100px); }
+        .izquierda  { transform: rotateY(-90deg) translateZ(100px); }
+        .derecha    { transform: rotateY(90deg) translateZ(100px); }
+        .abajo      { transform: rotateX(-90deg) translateZ(100px); background: #a52627; }
+
+        /* La Tapa */
+        .tapa-3d {
+            position: absolute;
+            width: 220px;
+            height: 40px;
+            background: var(--color-tapa);
+            transform-style: preserve-3d;
+            top: -20px;
+            left: -10px;
+            transform: translateZ(110px); /* Ajuste para que cubra */
+            transition: transform 0.8s ease, opacity 0.5s;
+        }
+
+        /* Cinta sobre la tapa */
+        .tapa-top {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: var(--color-tapa);
+            transform: rotateX(90deg) translateZ(20px);
+            top: -110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tapa-top::before, .tapa-top::after {
             content: '';
             position: absolute;
-            width: 100%;
-            height: 30px;
-            background: #f1c40f;
-            top: 50%;
-            transform: translateY(-50%);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+            background: var(--color-lazo);
+        }
+        .tapa-top::before { width: 45px; height: 100%; }
+        .tapa-top::after  { width: 100%; height: 45px; }
+
+        /* Animación de temblor */
+        .tiembla {
+            animation: shake 0.2s infinite;
         }
 
-        .tapa {
-            position: absolute;
-            top: -15px;
-            left: -5px;
-            width: 160px;
-            height: 40px;
-            background: #ff4757;
-            border-radius: 4px;
-            z-index: 2;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+        @keyframes shake {
+            0% { transform: rotateX(-20deg) rotateY(30deg) translate(2px, 0); }
+            50% { transform: rotateX(-20deg) rotateY(30deg) translate(-2px, 0); }
+            100% { transform: rotateX(-20deg) rotateY(30deg) translate(2px, 0); }
         }
 
         .no-tocar {
-            margin-top: 40px;
             font-family: 'Montserrat', sans-serif;
             font-size: 32px;
             color: #fff;
-            letter-spacing: 2px;
             text-shadow: 0 0 10px #ff4757;
-        }
-
-        .tiembla { animation: shake 0.1s infinite cubic-bezier(.36,.07,.19,.97); }
-
-        @keyframes shake {
-            0% { transform: translate(3px, 0) rotate(1deg); }
-            50% { transform: translate(-3px, 0) rotate(-1deg); }
-            100% { transform: translate(3px, 0) rotate(1deg); }
+            margin-top: 20px;
         }
 
         #contador {
             font-family: 'Montserrat', sans-serif;
-            font-size: 130px;
-            color: #f1c40f;
-            height: 150px;
+            font-size: 100px;
+            color: var(--color-lazo);
             font-weight: 900;
+            margin-top: 10px;
         }
+
+        /* --- Pantalla 2: Revelación --- */
         #pantalla2 {
             display: none;
             text-align: center;
@@ -108,20 +160,20 @@
         }
 
         .foto-espacio {
-            width: 280px;
-            height: 280px;
+            width: 300px;
+            height: 300px;
             margin: 0 auto 30px;
-            border: 6px solid #fff;
+            border: 8px solid #fff;
             background: #1a1a1a;
-            position: relative;
             transform: rotate(-3deg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             overflow: hidden;
         }
 
         .foto-espacio img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Esto hace que la foto se vea bien */
         }
 
         #mensaje {
@@ -129,6 +181,7 @@
             line-height: 1.5;
             color: #00ffcc;
             text-transform: uppercase;
+            min-height: 3em;
         }
 
         .cursor {
@@ -141,22 +194,32 @@
         }
 
         @keyframes blink { 50% { opacity: 0; } }
+
     </style>
 </head>
 <body>
 
     <div id="pantalla1">
         <div class="regalo-container" id="regalo" onclick="triggerSecuencia()">
-            <div class="tapa"></div>
-            <div class="caja-3d"></div>
+            <div class="caja-3d" id="caja">
+                <div class="cara frente"></div>
+                <div class="cara atras"></div>
+                <div class="cara izquierda"></div>
+                <div class="cara derecha"></div>
+                <div class="cara abajo"></div>
+                
+                <div class="tapa-3d" id="tapa">
+                    <div class="tapa-top"></div>
+                </div>
+            </div>
         </div>
-        <h2 class="no-tocar" id="textoGuia">NO TOCAR</h2>
+        <h2 class="no-tocar" id="textoGuia">TÓCAME</h2>
         <div id="contador"></div>
     </div>
 
     <div id="pantalla2">
         <div class="foto-espacio">
-            <img src="https://www.facebook.com/photo/?fbid=25129810893371230&set=a.104883499623982">
+            <img src="https://images.unsplash.com/photo-1544145945-f904253d0c7b?q=80&w=1000&auto=format&fit=crop" alt="Foto Mamá">
         </div>
         <div id="mensaje"></div><span class="cursor"></span>
     </div>
@@ -165,11 +228,13 @@
         const mensajeFinal = "¡Feliz día, mamá! Gracias por ser mi guía, mi apoyo y mi mejor ejemplo. Te quiero muchísimo.";
 
         function triggerSecuencia() {
-            const regalo = document.getElementById('regalo');
+            const caja = document.getElementById('caja');
+            const tapa = document.getElementById('tapa');
             const contador = document.getElementById('contador');
             const guia = document.getElementById('textoGuia');
 
-            regalo.classList.add('tiembla');
+            // Animación inicial
+            caja.classList.add('tiembla');
             guia.style.display = 'none';
             
             let num = 3;
@@ -181,7 +246,12 @@
                     contador.innerText = num;
                 } else {
                     clearInterval(timer);
-                    revelar();
+                    
+                    // Efecto de volar la tapa
+                    tapa.style.transform = "translateY(-500px) rotateX(90deg) scale(0)";
+                    tapa.style.opacity = "0";
+                    
+                    setTimeout(revelar, 600);
                 }
             }, 1000);
         }
@@ -190,19 +260,20 @@
             document.getElementById('pantalla1').style.display = 'none';
             document.getElementById('pantalla2').style.display = 'block';
 
+            // Confetti infinito por 4 segundos
             var end = Date.now() + (4 * 1000);
             var colors = ['#00ffcc', '#f1c40f', '#ff4757'];
 
             (function frame() {
                 confetti({
-                    particleCount: 4,
+                    particleCount: 5,
                     angle: 60,
                     spread: 55,
                     origin: { x: 0 },
                     colors: colors
                 });
                 confetti({
-                    particleCount: 4,
+                    particleCount: 5,
                     angle: 120,
                     spread: 55,
                     origin: { x: 1 },
@@ -220,7 +291,7 @@
         function typeWriter(i) {
             if (i < mensajeFinal.length) {
                 document.getElementById('mensaje').innerHTML += mensajeFinal.charAt(i);
-                setTimeout(() => typeWriter(i + 1), 40);
+                setTimeout(() => typeWriter(i + 1), 50);
             }
         }
     </script>
