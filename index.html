@@ -3,297 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Mamá</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Share+Tech+Mono&display=swap');
+    <title>Lobo Weaver Pro | Elite Edition</title>
+    
+    <link rel="stylesheet" href="styles.css">
 
-        :root {
-            --color-caja: #d63031;
-            --color-tapa: #ff4757;
-            --color-lazo: #f1c40f;
-        }
-
-        body {
-            margin: 0;
-            background-color: #080808;
-            color: white;
-            font-family: 'Share Tech Mono', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- Pantalla 1: Regalo 3D --- */
-        #pantalla1 { 
-            text-align: center; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Contenedor de perspectiva para el 3D */
-        .regalo-container {
-            width: 200px;
-            height: 200px;
-            perspective: 1000px;
-            cursor: pointer;
-            position: relative;
-            margin-bottom: 50px;
-        }
-
-        /* La caja en sí */
-        .caja-3d {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transform: rotateX(-20deg) rotateY(30deg);
-            transition: transform 0.5s ease;
-        }
-
-        .regalo-container:hover .caja-3d {
-            transform: rotateX(-20deg) rotateY(50deg);
-        }
-
-        /* Caras de la caja */
-        .cara {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: var(--color-caja);
-            border: 2px solid rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Lazo en las caras */
-        .cara::before {
-            content: '';
-            position: absolute;
-            background: var(--color-lazo);
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
-        }
-
-        /* Vertical ribbon */
-        .cara.frente::before, .cara.atras::before, .cara.izquierda::before, .cara.derecha::before {
-            width: 40px;
-            height: 100%;
-        }
-
-        .frente     { transform: translateZ(100px); }
-        .atras      { transform: rotateY(180deg) translateZ(100px); }
-        .izquierda  { transform: rotateY(-90deg) translateZ(100px); }
-        .derecha    { transform: rotateY(90deg) translateZ(100px); }
-        .abajo      { transform: rotateX(-90deg) translateZ(100px); background: #a52627; }
-
-        /* La Tapa */
-        .tapa-3d {
-            position: absolute;
-            width: 220px;
-            height: 40px;
-            background: var(--color-tapa);
-            transform-style: preserve-3d;
-            top: -20px;
-            left: -10px;
-            transform: translateZ(110px); /* Ajuste para que cubra */
-            transition: transform 0.8s ease, opacity 0.5s;
-        }
-
-        /* Cinta sobre la tapa */
-        .tapa-top {
-            position: absolute;
-            width: 220px;
-            height: 220px;
-            background: var(--color-tapa);
-            transform: rotateX(90deg) translateZ(20px);
-            top: -110px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .tapa-top::before, .tapa-top::after {
-            content: '';
-            position: absolute;
-            background: var(--color-lazo);
-        }
-        .tapa-top::before { width: 45px; height: 100%; }
-        .tapa-top::after  { width: 100%; height: 45px; }
-
-        /* Animación de temblor */
-        .tiembla {
-            animation: shake 0.2s infinite;
-        }
-
-        @keyframes shake {
-            0% { transform: rotateX(-20deg) rotateY(30deg) translate(2px, 0); }
-            50% { transform: rotateX(-20deg) rotateY(30deg) translate(-2px, 0); }
-            100% { transform: rotateX(-20deg) rotateY(30deg) translate(2px, 0); }
-        }
-
-        .no-tocar {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 32px;
-            color: #fff;
-            text-shadow: 0 0 10px #ff4757;
-            margin-top: 20px;
-        }
-
-        #contador {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 100px;
-            color: var(--color-lazo);
-            font-weight: 900;
-            margin-top: 10px;
-        }
-
-        /* --- Pantalla 2: Revelación --- */
-        #pantalla2 {
-            display: none;
-            text-align: center;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        .foto-espacio {
-            width: 300px;
-            height: 300px;
-            margin: 0 auto 30px;
-            border: 8px solid #fff;
-            background: #1a1a1a;
-            transform: rotate(-3deg);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            overflow: hidden;
-        }
-
-        .foto-espacio img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Esto hace que la foto se vea bien */
-        }
-
-        #mensaje {
-            font-size: 22px;
-            line-height: 1.5;
-            color: #00ffcc;
-            text-transform: uppercase;
-            min-height: 3em;
-        }
-
-        .cursor {
-            background: #00ffcc;
-            display: inline-block;
-            width: 12px;
-            height: 24px;
-            margin-left: 5px;
-            animation: blink 0.7s infinite;
-        }
-
-        @keyframes blink { 50% { opacity: 0; } }
-
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ext-language_tools.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
 </head>
 <body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Lobo Panel 🐺</h2>
+            <button id="closeMenu">✕</button>
+        </div>
 
-    <div id="pantalla1">
-        <div class="regalo-container" id="regalo" onclick="triggerSecuencia()">
-            <div class="caja-3d" id="caja">
-                <div class="cara frente"></div>
-                <div class="cara atras"></div>
-                <div class="cara izquierda"></div>
-                <div class="cara derecha"></div>
-                <div class="cara abajo"></div>
-                
-                <div class="tapa-3d" id="tapa">
-                    <div class="tapa-top"></div>
+        <div class="sidebar-actions">
+            <button class="btn" id="btnToggleTheme">🌞/🌙 Modo Claro/Oscuro</button>
+        </div>
+
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-auth">👤 CUENTA / LOGIN <span>▼</span></button>
+            <div id="menu-auth" class="menu-content">
+                <div id="user-info"></div>
+                <button class="btn btn-google" id="btnGoogle">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Google Login
+                </button>
+                <div id="email-form" class="auth-box">
+                    <input type="email" id="email" placeholder="Tu Email">
+                    <input type="password" id="password" placeholder="Tu Clave">
+                    <button class="btn btn-accent" id="btnLogin">Entrar / Registrar</button>
+                </div>
+                <button id="btnLogout" class="btn btn-reset">Cerrar Sesión</button>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-files-html">🟧 Archivos HTML <span>▼</span></button>
+            <div id="menu-files-html" class="menu-content">
+                <ul id="filelist-html" class="file-list"></ul>
+                <button class="btn-file-add" data-type="html">+ Nuevo HTML</button>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-files-css">🟦 Archivos CSS <span>▼</span></button>
+            <div id="menu-files-css" class="menu-content">
+                <ul id="filelist-css" class="file-list"></ul>
+                <button class="btn-file-add" data-type="css">+ Nuevo CSS</button>
+            </div>
+        </div>
+    
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-files-js">🟨 Archivos JS <span>▼</span></button>
+            <div id="menu-files-js" class="menu-content">
+                <ul id="filelist-js" class="file-list"></ul>
+                <button class="btn-file-add" data-type="js">+ Nuevo JS</button>
+            </div>
+        </div>
+
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-copy">📋 COPIAR CÓDIGO <span>▼</span></button>
+            <div id="menu-copy" class="menu-content">
+                <button class="btn btn-copy" data-lang="html">Copiar HTML</button>
+                <button class="btn btn-copy" data-lang="css">Copiar CSS</button>
+                <button class="btn btn-copy" data-lang="js">Copiar JS</button>
+                <button class="btn btn-copy" data-lang="py">Copiar Python 🐍</button>
+                <button class="btn btn-all" id="copyFullProject">Copiar Proyecto Completo</button>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-zip">💾 EXPORTAR <span>▼</span></button>
+            <div id="menu-zip" class="menu-content">
+                <button class="btn btn-save-green" id="btnZip">Descargar ZIP</button>
+            </div>
+        </div>
+        
+        <div class="menu-section">
+            <button class="menu-header" data-target="menu-actions">⚙️ ACCIONES <span>▼</span></button>
+            <div id="menu-actions" class="menu-content">
+                <button class="btn btn-save" id="btnSave">GUARDAR EN NUBE ☁️</button>
+                <button class="btn" id="btnDictionary">DICCIONARIO 🤨</button>
+            </div>
+        </div>
+    </aside>
+
+    <header>
+        <div class="header-left">
+            <button class="menu-btn" id="openMenu">☰</button>
+            <h1 class="logo">LOBO WEAVER PRO</h1>
+            <div class="tab-system">
+                <button class="tab-btn active" id="tabWeb">WEB</button>
+                <button class="tab-btn" id="tabPy">PYTHON 🐍</button>
+            </div>
+        </div>
+        <div class="header-right">
+            <div id="status-cloud">● Local</div>
+            <button class="btn-thanos" id="thanosSnap">DESTRUIR TODO 🫰</button>
+        </div>
+    </header>
+
+    <main class="main-workspace" id="main-content">
+        <div id="web-env" class="workspace-env">
+            <div class="code-panels">
+                <div class="panel active" id="panel-html">
+                    <div class="panel-header" data-panel="html">HTML</div>
+                    <div id="html-editor" class="editor-container"></div>
+                </div>
+                <div class="panel" id="panel-css">
+                    <div class="panel-header" data-panel="css">CSS</div>
+                    <div id="css-editor" class="editor-container"></div>
+                </div>
+                <div class="panel" id="panel-js">
+                    <div class="panel-header" data-panel="js">JS</div>
+                    <div id="js-editor" class="editor-container"></div>
+                </div>
+            </div>
+            
+            <div class="responsive-bar">
+                <button class="res-btn active" data-size="desktop">🖥️</button>
+                <button class="res-btn" data-size="tablet">📲</button>
+                <button class="res-btn" data-size="mobile">📱</button>
+            </div>
+
+            <div class="preview-panel">
+                <iframe id="output"></iframe>
+                <div id="err-js-preview"></div>
+            </div>
+        </div>
+
+        <div id="py-env" class="workspace-env hidden">
+            <div class="python-workspace">
+                <div class="editor-box">
+                    <div class="panel-header">PYTHON SCRIPT</div>
+                    <div id="py-editor" class="editor-container"></div>
+                </div>
+                <div class="console-box">
+                    <div class="panel-header">OUTPUT</div>
+                    <div id="py-output" class="py-console"></div>
                 </div>
             </div>
         </div>
-        <h2 class="no-tocar" id="textoGuia">TÓCAME</h2>
-        <div id="contador"></div>
-    </div>
+    </main>
 
-    <div id="pantalla2">
-        <div class="foto-espacio">
-            <img src="IMG_20260124_102902.jpg" alt="Foto Mamá">
-        </div>
-        <div id="mensaje"></div><span class="cursor"></span>
-    </div>
-
-    <script>
-        const mensajeFinal = "¡Feliz día, mamá! Gracias por ser mi guía, mi apoyo y mi mejor ejemplo. Te quiero muchísimo.";
-
-        function triggerSecuencia() {
-            const caja = document.getElementById('caja');
-            const tapa = document.getElementById('tapa');
-            const contador = document.getElementById('contador');
-            const guia = document.getElementById('textoGuia');
-
-            // Animación inicial
-            caja.classList.add('tiembla');
-            guia.style.display = 'none';
-            
-            let num = 3;
-            contador.innerText = num;
-
-            let timer = setInterval(() => {
-                num--;
-                if (num > 0) {
-                    contador.innerText = num;
-                } else {
-                    clearInterval(timer);
-                    
-                    // Efecto de volar la tapa
-                    tapa.style.transform = "translateY(-500px) rotateX(90deg) scale(0)";
-                    tapa.style.opacity = "0";
-                    
-                    setTimeout(revelar, 600);
-                }
-            }, 1000);
-        }
-
-        function revelar() {
-            document.getElementById('pantalla1').style.display = 'none';
-            document.getElementById('pantalla2').style.display = 'block';
-
-            // Confetti infinito por 4 segundos
-            var end = Date.now() + (4 * 1000);
-            var colors = ['#00ffcc', '#f1c40f', '#ff4757'];
-
-            (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: colors
-                });
-
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
-
-            typeWriter(0);
-        }
-
-        function typeWriter(i) {
-            if (i < mensajeFinal.length) {
-                document.getElementById('mensaje').innerHTML += mensajeFinal.charAt(i);
-                setTimeout(() => typeWriter(i + 1), 50);
-            }
-        }
-    </script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
